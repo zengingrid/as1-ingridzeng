@@ -1,0 +1,19 @@
+#!/bin/bash
+
+PS_OUT=()
+while IFS= read -r line; do
+        PS_OUT+=("$line")
+done <<< $(ps -A --sort -rss -o comm,rss | grep "$1" | awk '{str = sprintf("%-15s\t\t%.2f MB", $1, $2/1024)}; {print str}')
+
+if [ ! -z "$PS_OUT" ]
+then
+        echo -e "COMM\t\t\tRSS"
+        for i in "${!PS_OUT[@]}"; do
+                echo "${PS_OUT[i]}"
+        done
+        exit 0
+else
+        echo "No match is found."
+        exit 1
+fi
+

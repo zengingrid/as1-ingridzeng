@@ -1,0 +1,32 @@
+#!/bin/bash
+
+dir="$HOME/.trash"
+now=$(date +"%F-%H:%M:%S")
+
+if [ ! -d $dir ]; then
+        mkdir $dir
+fi
+
+
+if [ -f $1 ]; then
+        mv $1 "$dir/$1-$now"
+        exit 0
+elif [ -d "$1" ]; then
+        echo "Please use the [-d] option to delete a directory."
+        exit 1
+else
+        while getopts "d" option; do
+                case $option in
+                        d ) if [ -d "$2" ]; then
+                                mv $2 "$dir/$2-$now"
+                                exit 0
+                            elif [ ! -d "$2" ]; then
+                            echo "$2 is not a directory"
+                            exit 1
+                            fi
+                            ;;
+                        * ) echo "Usage: cmd [-d]"
+                            exit 1
+                esac
+        done
+fi

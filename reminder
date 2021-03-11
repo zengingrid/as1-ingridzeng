@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# create a reminder that will run whenever a new shell is opened.
+# -A to add in new reminder
+# if no option is passed in, return all the reminders.
+
+if [ ! -d "$HOME/.config" ]; then
+        mkdir $HOME/.config
+fi
+
+if [ ! -d "$HOME/.config/rmdr" ]; then
+        mkdir $HOME/.config/rmdr
+fi
+
+pathname="$HOME/.config/rmdr/reminders"
+
+if [ ! -f "$pathname" ];then
+        touch $pathname
+fi
+
+if [ -z $1 ]; then
+        echo "Here is all the reminders:"
+        cat "$pathname"
+        exit 0
+else
+        while getopts "A" option; do
+                case $option in
+                        A ) echo "$2" >> $pathname 
+			    exit 0
+			    ;;
+                        * ) echo "Usage: cmd [-A]"
+			    exit 1 
+                            ;;
+                esac
+        done
+fi:
